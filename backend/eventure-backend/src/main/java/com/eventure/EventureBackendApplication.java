@@ -1,4 +1,4 @@
-package com.eventure.eventure_backend;
+package com.eventure;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
