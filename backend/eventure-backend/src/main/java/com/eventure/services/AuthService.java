@@ -57,4 +57,11 @@ public class AuthService {
         String jwt = jwtService.generateToken(user);
         return new AuthResponse(jwt);
     }
+    public String encodePassword(String rawPassword) {
+        return passwordEncoder.encode(rawPassword);
+    }
+
+    public void saveUser(User user) {
+        userRepository.save(user);
+    }
 }
