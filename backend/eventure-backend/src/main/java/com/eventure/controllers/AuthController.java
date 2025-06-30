@@ -38,7 +38,7 @@ public class AuthController {
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
-  @PostMapping("/users")
+  @PostMapping("/users/create")
 @PreAuthorize("hasRole('ADMIN')")
 public ResponseEntity<?> createUser(@RequestBody CreateUserRequest request) {
     Role role = roleRepository.findByName(RoleName.valueOf(request.getRole()))

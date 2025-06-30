@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,7 +26,19 @@ public class EventController {
     @PreAuthorize("hasAnyRole('ORGANIZER', 'ADMIN')")
     public ResponseEntity<?> create(@RequestBody Event event, Principal principal) {
         event.setCreatedAt(LocalDateTime.now());
-        // Aquí puedes añadir el organizer si usas Principal → usuario logueado
+        // Obtener el usuario autenticado
+        String email = principal.getName();
+        var user = eventService.getUserByEmail(email);
+
+        // Validar si tiene rol adecuado (por seguridad extra)
+        boolean isOrganizer = user.getRoles().stream()
+                .anyMatch(role -> role.getName().equals("ROLE_ORGANIZER") || role.getName().equals("ROLE_ADMIN"));
+
+        if (!isOrganizer) {
+            return ResponseEntity.status(403).body("No tienes permisos para crear eventos");
+        }
+
+        event.setOrganizer(user);
         return ResponseEntity.ok(eventService.create(event));
     }
 

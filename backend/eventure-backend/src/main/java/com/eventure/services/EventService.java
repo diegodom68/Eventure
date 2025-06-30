@@ -1,8 +1,12 @@
 package com.eventure.services;
 
 import com.eventure.models.Event;
+import com.eventure.models.User;
 import com.eventure.repositories.EventRepository;
+import com.eventure.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +16,7 @@ import java.util.List;
 public class EventService {
 
     private final EventRepository eventRepository;
+    private final UserRepository userRepository;
 
     public List<Event> getAll() {
         return eventRepository.findAll();
@@ -33,4 +38,8 @@ public class EventService {
         original.setLocation(updated.getLocation());
         return eventRepository.save(original);
     }
+    public User getUserByEmail(String email) {
+    return userRepository.findByEmail(email)
+        .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+}
 }
